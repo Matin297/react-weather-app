@@ -33,8 +33,6 @@ export function extractSameDays(date, list) {
         }
     }
 
-    console.log(days)
-
-    return days.slice(0, 5);
+    return days;
 
 }

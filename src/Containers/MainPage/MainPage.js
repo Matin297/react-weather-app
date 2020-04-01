@@ -3,16 +3,16 @@ import { Link } from 'react-router-dom'
 import { Select } from 'antd'
 import { v4 as uuidv4 } from 'uuid'
 import { getForcastByCoordsAPI, getForecastByNameAPI } from '../../api/api'
-import { extractFiveDays, extractSameDays } from '../../utils/days'
+import { extractFiveDays } from '../../utils/days'
 import 'antd/es/select/style/css'
 import './MainPage.css'
 
 const { Option } = Select
 
-function MainPage() {
+function MainPage(props) {
 
     const [err, setErr] = useState('');
-    const [isGeoLocationAllowed, setIsGeoLocationAllowed] = useState(false);
+    const [isGeoLocationAllowed, setIsGeoLocationAllowed] = useState(true);
     const [forecast, setForcast] = useState({
         name: '',
         list: [],
@@ -39,13 +39,18 @@ function MainPage() {
         if (!navigator.geolocation)
             return setIsGeoLocationAllowed(false);
 
-        setIsGeoLocationAllowed(true);
+
+        // check if location state is not empty
+        if (props.location.state) {
+            setForcast(props.location.state)
+            return props.history.replace('/', null);
+        }
 
         navigator.geolocation.getCurrentPosition(pos => {
 
             getForcastByCoords(pos.coords.longitude, pos.coords.latitude);
 
-        }, e => setErr("Unable to retrieve data!"))
+        }, e => setErr("Unable to retrieve Your Location! Choose another."))
 
     }, [])
 
@@ -71,7 +76,9 @@ function MainPage() {
             .catch(e => console.log(e))
     }
 
-    function getForcastByName(name) {
+    function getForecastByName(name) {
+
+        setErr(false);
 
         getForecastByNameAPI(name)
             .then(res => {
@@ -84,7 +91,7 @@ function MainPage() {
             .catch(e => console.log(e))
     }
 
-    const handleChange = value => getForcastByName(value);
+    const handleChange = value => getForecastByName(value);
 
     return (
         <div className="hp">
@@ -101,7 +108,6 @@ function MainPage() {
                                 width: "50%"
                             }}
                             value={forecast.name}
-                            disabled={err}
                         >
                             {
                                 cities.map(city =>
@@ -128,7 +134,8 @@ function MainPage() {
                                             to={{
                                                 pathname: `/details/${data.dayName.toLowerCase()}`,
                                                 state: {
-                                                    data: extractSameDays(data.dt_txt.split(' ')[0], forecast.data)
+                                                    forecast: { ...forecast },
+                                                    date: data.dt_txt.split(' ')[0]
                                                 }
                                             }}
                                             key={index}

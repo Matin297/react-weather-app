@@ -1,15 +1,27 @@
 import React from 'react'
+import { extractSameDays } from '../../utils/days'
 import { Link } from 'react-router-dom'
 import './ForecastDetails.css'
 
 function ForecastDetails(props) {
 
-    const dataList = props.location.state.data;
+    const forecast = props.location.state.forecast;
+    const date = props.location.state.date;
+
+    const dataList = extractSameDays(date, forecast.data);
 
     return (
         <div className="forecast-details">
 
-            <Link to="/" className="back-butt">
+            <Link
+                to={{
+                    pathname: "/",
+                    state: {
+                        ...forecast
+                    }
+                }}
+                className="back-butt"
+            >
                 Back
             </Link>
 
@@ -19,12 +31,15 @@ function ForecastDetails(props) {
 
                 {
                     dataList &&
-                    dataList.map(data => (
-                        <div className="forecast-details__item">
+                    dataList.map((data, index) => (
+                        <div key={index} className="forecast-details__item">
 
                             <img src={`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="weather icon" />
 
-                            <div> {data.weather[0].description} </div>
+                            <div>
+                                <div> {data.weather[0].description} </div>
+                                <div> {data.dt_txt.split(' ')[1]} </div>
+                            </div>
 
                             <div>
                                 <span> Temperature </span>
