@@ -19,7 +19,7 @@ export function extractFiveDays(list) {
 
 }
 
-export function extractSameDays(date, list) {
+export function extractSameDays(list, date) {
 
     let days = [];
 

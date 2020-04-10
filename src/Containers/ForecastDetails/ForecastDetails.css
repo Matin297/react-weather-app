@@ -26,6 +26,8 @@
 
 .forecast-details__item > div {
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .forecast-details__item > div > span:last-of-type {

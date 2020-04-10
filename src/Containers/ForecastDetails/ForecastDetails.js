@@ -1,19 +1,15 @@
 import React from 'react'
-import { extractSameDays } from '../../utils/days'
-import { Link } from 'react-router-dom'
+import ForecastItem from '../../Components/ForecastDetails/ForecastItem/ForecastItem'
+// import { extractSameDays } from '../../utils/days'
+// import { Link } from 'react-router-dom'
 import './ForecastDetails.css'
 
 function ForecastDetails(props) {
 
-    const forecast = props.location.state.forecast;
-    const date = props.location.state.date;
-
-    const dataList = extractSameDays(date, forecast.data);
-
     return (
         <div className="forecast-details">
 
-            <Link
+            {/* <Link
                 to={{
                     pathname: "/",
                     state: {
@@ -23,48 +19,49 @@ function ForecastDetails(props) {
                 className="back-butt"
             >
                 Back
-            </Link>
+            </Link> */}
 
             <div className="forecast-details__day"> {props.match.params.day} </div>
 
             <div className="forecast-details__c">
 
                 {
-                    dataList &&
-                    dataList.map((data, index) => (
+                    props.dataDetails &&
+                    props.dataDetails.map((details, index) => (
                         <div key={index} className="forecast-details__item">
 
-                            <img src={`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="weather icon" />
+                            <img src={`http://openweathermap.org/img/wn/${details.weather[0].icon}@2x.png`} alt="weather icon" />
 
-                            <div>
-                                <div> {data.weather[0].description} </div>
-                                <div> {data.dt_txt.split(' ')[1]} </div>
-                            </div>
+                            <ForecastItem
+                                title={details.weather[0].description}
+                                value={details.dt_txt.split(' ')[1]}
+                            />
 
-                            <div>
-                                <span> Temperature </span>
-                                <span> {data.main.temp}&deg; </span>
-                            </div>
+                            <ForecastItem
+                                title="Temperature"
+                                value={`${details.main.temp}\u00b0C`}
+                            />
 
-                            <div>
-                                <span> Feels like </span>
-                                <span> {data.main.feels_like}&deg; </span>
-                            </div>
+                            <ForecastItem
+                                title="Feels like"
+                                value={`${details.main.feels_like}\u00b0C`}
+                            />
 
-                            <div>
-                                <span> Humidity </span>
-                                <span> {data.main.humidity}% </span>
-                            </div>
+                            <ForecastItem
+                                title="Humidity"
+                                value={`${details.main.humidity}%`}
+                            />
 
-                            <div>
-                                <span> Pressure </span>
-                                <span> {data.main.pressure}hPa </span>
-                            </div>
+                            <ForecastItem
+                                title="Pressure"
+                                value={`${details.main.pressure}hPa`}
+                            />
 
-                            <div>
-                                <span> Cloudiness </span>
-                                <span> {data.clouds.all}% </span>
-                            </div>
+                            <ForecastItem
+                                title="Cloudiness"
+                                value={`${details.clouds.all}%`}
+                            />
+
                         </div>
                     ))
                 }

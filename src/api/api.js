@@ -1,4 +1,4 @@
-const apiKey = "161a835b70c46f77f49107baab678981";
+const apiKey = process.env.REACT_APP_API_KEY;
 
 // get weather forecast by geographic coordinates
 export const getForcastByCoordsAPI = async (lon, lat) => {

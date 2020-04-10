@@ -44,3 +44,9 @@ a {
   background-color: #40a9ff;
   color: white;
 }
+
+.main-body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
